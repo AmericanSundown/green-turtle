@@ -4,9 +4,9 @@
 
 
 GraphRDFaProcessor.prototype = new RDFaProcessor();
-GraphRDFaProcessor.prototype.constructor=RDFaProcessor;
+GraphRDFaProcessor.prototype.constructor = RDFaProcessor;
 function GraphRDFaProcessor(kb, doc) {
-   RDFaProcessor.call(this,kb);
+   RDFaProcessor.call(this, kb);
    this.doc = doc;
 }
 
@@ -22,8 +22,9 @@ GraphRDFaProcessor.prototype.getObjectSize = function(obj) {
 };
 */
 
-GraphRDFaProcessor.prototype.init = function() {
+GraphRDFaProcessor.prototype.init = function(kb) { // Knowledge base this is going into
    var thisObj = this;
+   this.kb = kb;
    this.finishedHandlers.push(function(node) {
       for (var subject in thisObj.target.graph.subjects) {
          var snode = thisObj.target.graph.subjects[subject];
@@ -43,12 +44,14 @@ GraphRDFaProcessor.prototype.newSubjectOrigin = function(origin,subject) {
 }
 
 GraphRDFaProcessor.prototype.newSubject = function(origin,subject) {
-   return this.sym(subject);
+   return this.kb.sym(subject);
 }
 
 
 GraphRDFaProcessor.prototype.addTriple = function(origin,subject,predicate,object) {
-    this.kb.add(subject, kb.sym(predicate), $rdf.literal(object.value, $rdf.sym(object.type)), this.doc);
+    this.kb.add(subject,
+        kb.sym(predicate),
+        $rdf.literal(object.value, $rdf.sym(object.type)), this.doc);
     return;
 }
 
